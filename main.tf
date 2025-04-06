@@ -193,7 +193,7 @@ resource "aws_s3_bucket" "source" {
 resource "aws_s3_bucket_acl" "source_bucket_acl" {
   provider = aws.central
 
-  bucket = aws_s3_bucket.source.id
+  bucket = aws_s3_bucket.s3_tf.id
   acl    = "private"
 }
 
