@@ -18,5 +18,5 @@ locals {
 }
 
 resource "aws_s3_bucket" "s3_tf" {
-  bucket = local.name_prefix + "-s3-tf-bkt-" + tostring(local.account_id)
+  bucket = "$locals.name_prefix-s3-tf-bkt-$locals.account_id"
 }
