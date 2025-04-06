@@ -306,7 +306,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "dest-s3-lifecycle" {
   }
 }
 
-data "aws_iam_policy_document" "assume_role" {
+data "aws_iam_policy_document" "dest-assume_role" {
   statement {
     effect = "Allow"
 
