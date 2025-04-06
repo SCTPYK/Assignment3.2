@@ -53,6 +53,7 @@ resource "aws_s3_bucket_versioning" "s3-versioning" {
   }
 }
 
+
 resource "aws_s3_bucket_public_access_block" "s3-public-access" {
   bucket = aws_s3_bucket.s3_tf.id
 
@@ -77,7 +78,7 @@ data "aws_iam_policy_document" "topic" {
     condition {
       test     = "ArnLike"
       variable = "aws:SourceArn"
-      values   = [aws_s3_bucket.s3_tf.arn]
+      values   = [aws_s3_bucket.s3_tf.arn,aws_s3_bucket.destination.arn]
     }
   }
 }
@@ -129,6 +130,8 @@ data "aws_iam_policy_document" "assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
+
+# Replication 
 
 resource "aws_iam_role" "replication" {
   name               = "tf-iam-role-replication-s3"
@@ -216,4 +219,32 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
       storage_class = "STANDARD"
     }
   }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "s3-kms" {
+  bucket = aws_s3_bucket.destination.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.default.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
+
+resource "aws_s3_bucket_versioning" "s3-versioning" {
+  bucket = aws_s3_bucket.destination.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+
+resource "aws_s3_bucket_public_access_block" "s3-public-access" {
+  bucket = aws_s3_bucket.destination.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
