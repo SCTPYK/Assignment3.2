@@ -199,7 +199,7 @@ resource "aws_s3_bucket_acl" "source_bucket_acl" {
 
 
 resource "aws_s3_bucket_replication_configuration" "replication" {
-  provider = aws.central
+  provider = aws
   # Must have bucket versioning enabled first
   depends_on = [aws_s3_bucket_versioning.s3-versioning]
 
