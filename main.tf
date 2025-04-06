@@ -221,7 +221,7 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "s3-kms" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "dest-kms" {
   bucket = aws_s3_bucket.destination.id
 
   rule {
@@ -232,7 +232,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "s3-kms" {
   }
 }
 
-resource "aws_s3_bucket_versioning" "s3-versioning" {
+resource "aws_s3_bucket_versioning" "dest-versioning" {
   bucket = aws_s3_bucket.destination.id
   versioning_configuration {
     status = "Enabled"
@@ -240,7 +240,7 @@ resource "aws_s3_bucket_versioning" "s3-versioning" {
 }
 
 
-resource "aws_s3_bucket_public_access_block" "s3-public-access" {
+resource "aws_s3_bucket_public_access_block" "dest-public-access" {
   bucket = aws_s3_bucket.destination.id
 
   block_public_acls       = true
