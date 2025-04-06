@@ -101,7 +101,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3-lifecycle" {
   bucket = aws_s3_bucket.s3_tf.id
   rule {
     id     = "Send to Glacier after 30 days"
-    status = Enabled
+    status = "Enabled"
 
     filter {
       prefix = ""
