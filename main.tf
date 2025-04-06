@@ -3,10 +3,17 @@ provider "aws" {
 }
 
 terraform {
+  required_version = ">= 1.8.2"
   backend "s3" {
     bucket = "sctp-ce8-tfstate-unique"
     key    = "yk-s3-tf-ci.tfstate"
     region = "us-east-1"
+  }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.0, < 4.0"
+    }
   }
 }
 
