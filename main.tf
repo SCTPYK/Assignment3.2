@@ -28,6 +28,31 @@ locals {
 resource "aws_kms_key" "default" {
   description         = "KMS Key for default encryption of S3 buckets"
   enable_key_rotation = true
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "key-consolepolicy-3"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "*"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "Allow S3 to use the key"
+        Effect = "Allow"
+        Principal = {
+          Service = "s3.amazonaws.com"
+        }
+        Action   = "kms:Encrypt"
+        Resource = "*"
+      }
+    ]
+  })
+
 }
 
 resource "aws_s3_bucket" "s3_tf" {
