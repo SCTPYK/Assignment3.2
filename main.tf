@@ -248,3 +248,73 @@ resource "aws_s3_bucket_public_access_block" "dest-public-access" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+
+
+data "aws_iam_policy_document" "dest-topic" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+
+    actions   = ["SNS:Publish"]
+    resources = ["arn:aws:sns:*:*:s3-event-notification-topic"]
+
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values   = [aws_s3_bucket.destination.arn]
+    }
+  }
+}
+resource "aws_sns_topic" "dest-topic" {
+  name              = "s3-event-notification-topic"
+  policy            = data.aws_iam_policy_document.topic.json
+  kms_master_key_id = aws_kms_key.default.arn
+}
+
+resource "aws_s3_bucket_notification" "dest-bucket_notification" {
+  bucket = aws_s3_bucket.destination.id
+
+  topic {
+    topic_arn     = aws_sns_topic.topic.arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_suffix = ".log"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "dest-s3-lifecycle" {
+  bucket = aws_s3_bucket.destination.id
+  rule {
+    id     = "Send to Glacier after 30 days"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+
+    filter {
+      prefix = ""
+    }
+    transition {
+      days          = 30
+      storage_class = "GLACIER"
+    }
+  }
+}
+
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
