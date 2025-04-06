@@ -306,15 +306,3 @@ resource "aws_s3_bucket_lifecycle_configuration" "dest-s3-lifecycle" {
   }
 }
 
-data "aws_iam_policy_document" "dest-assume_role" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["s3.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
