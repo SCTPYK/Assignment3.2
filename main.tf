@@ -118,18 +118,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "s3-lifecycle" {
   }
 }
 
-data "aws_iam_policy_document" "assume_role" {
-  statement {
-    effect = "Allow"
-
-    principals {
-      type        = "Service"
-      identifiers = ["s3.amazonaws.com"]
-    }
-
-    actions = ["sts:AssumeRole"]
-  }
-}
 
 # Replication 
 
@@ -272,7 +260,7 @@ data "aws_iam_policy_document" "dest-topic" {
 }
 resource "aws_sns_topic" "dest-topic" {
   name              = "s3-event-notification-topic"
-  policy            = data.aws_iam_policy_document.topic.json
+  policy            = data.aws_iam_policy_document.dest-topic.json
   kms_master_key_id = aws_kms_key.default.arn
 }
 
