@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "replication" {
 
     resources = [aws_s3_bucket.s3_tf.arn]
   }
-    statement {
+  statement {
     effect = "Allow"
 
     actions = [
