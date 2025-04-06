@@ -96,3 +96,20 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     filter_suffix = ".log"
   }
 }
+
+resource "aws_s3_bucket_lifecycle_configuration" "s3-lifecycle" {
+  bucket = aws_s3_bucket.s3_tf.id
+  rule {
+    id     = "Send to Glacier after 30 days"
+    status = Enabled
+
+    filter {
+      prefix = ""
+    }
+    transition {
+      days          = 30
+      storage_class = "GLACIER"
+    }
+  }
+}
+
