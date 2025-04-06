@@ -185,13 +185,9 @@ resource "aws_s3_bucket" "destination" {
   bucket = "tf-test-bucket-destination-s3"
 }
 
-resource "aws_s3_bucket" "source" {
-  provider = aws.central
-  bucket   = "tf-test-bucket-source-12345"
-}
 
 resource "aws_s3_bucket_acl" "source_bucket_acl" {
-  provider = aws.central
+  provider = aws
 
   bucket = aws_s3_bucket.s3_tf.id
   acl    = "private"
@@ -216,7 +212,7 @@ resource "aws_s3_bucket_replication_configuration" "replication" {
     status = "Enabled"
 
     destination {
-      bucket        = aws_s3_bucket.s3_tf.arn
+      bucket        = aws_s3_bucket.destination.arn
       storage_class = "STANDARD"
     }
   }
