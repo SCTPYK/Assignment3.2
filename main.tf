@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 terraform {
   required_version = ">= 1.8.2"  
 
@@ -16,6 +12,10 @@ terraform {
     key    = "yk-s3-tf-ci.tfstate"  
     region = "us-east-1"
   }
+}
+
+provider "aws" {
+  region = "us-east-1"
 }
 
 data "aws_caller_identity" "current" {}
