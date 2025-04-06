@@ -3,6 +3,15 @@ provider "aws" {
 }
 
 terraform {
+  required_version = ">= 0.12"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 3.0, < 4.0"  # Version constraint for AWS provider
+    }
+  }
+  
   backend "s3" {
     bucket = "sctp-ce8-tfstate-unique"
     key    = "yk-s3-tf-ci.tfstate"
@@ -18,5 +27,5 @@ locals {
 }
 
 resource "aws_s3_bucket" "s3_tf" {
-  bucket = "$locals.name_prefix-s3-tf-bkt-$locals.account_id"
+  bucket = local.name_prefix-s3-tf-bkt-local.account_id
 }
