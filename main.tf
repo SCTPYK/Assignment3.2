@@ -319,7 +319,7 @@ resource "aws_s3_bucket" "s3_tf-log_bucket" {
 }
 
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
-  bucket = aws_s3_bucket.log_bucket.id
+  bucket = aws_s3_bucket.s3_tf-log_bucket.id
   acl    = "log-delivery-write"
 }
 
