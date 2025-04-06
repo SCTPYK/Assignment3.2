@@ -306,3 +306,26 @@ data "aws_iam_policy_document" "dest-assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
+
+# Access logging for bucket s3_tf
+
+resource "aws_s3_bucket_acl" "example" {
+  bucket = aws_s3_bucket.s3_tf.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket" "s3_tf-log_bucket" {
+  bucket = "my-tf-log-bucket-s3_tf"
+}
+
+resource "aws_s3_bucket_acl" "log_bucket_acl" {
+  bucket = aws_s3_bucket.log_bucket.id
+  acl    = "log-delivery-write"
+}
+
+resource "aws_s3_bucket_logging" "example" {
+  bucket = aws_s3_bucket.s3_tf.id
+
+  target_bucket = aws_s3_bucket.log_bucket.id
+  target_prefix = "log/"
+}
