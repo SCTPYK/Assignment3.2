@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 terraform {
   backend "s3" {
     bucket = "sctp-ce8-tfstate-unique"
@@ -6,9 +10,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  region = "us-east-1"
-}
 
 data "aws_caller_identity" "current" {}
 
