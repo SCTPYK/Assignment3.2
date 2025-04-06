@@ -82,8 +82,9 @@ data "aws_iam_policy_document" "topic" {
   }
 }
 resource "aws_sns_topic" "topic" {
-  name   = "s3-event-notification-topic"
-  policy = data.aws_iam_policy_document.topic.json
+  name              = "s3-event-notification-topic"
+  policy            = data.aws_iam_policy_document.topic.json
+  kms_master_key_id = aws_kms_key.default.arn
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
