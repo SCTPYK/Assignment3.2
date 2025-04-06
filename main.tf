@@ -78,7 +78,7 @@ data "aws_iam_policy_document" "topic" {
     condition {
       test     = "ArnLike"
       variable = "aws:SourceArn"
-      values   = [aws_s3_bucket.s3_tf.arn,aws_s3_bucket.destination.arn]
+      values   = [aws_s3_bucket.s3_tf.arn, aws_s3_bucket.destination.arn]
     }
   }
 }
