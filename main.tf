@@ -135,7 +135,7 @@ data "aws_iam_policy_document" "assume_role" {
 
 resource "aws_iam_role" "replication" {
   name               = "tf-iam-role-replication-s3"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+  assume_role_policy = data.aws_iam_policy_document.dest-assume_role.json
 }
 
 data "aws_iam_policy_document" "replication" {
@@ -147,7 +147,7 @@ data "aws_iam_policy_document" "replication" {
       "s3:ListBucket",
     ]
 
-    resources = [aws_s3_bucket.s3_tf.arn]
+    resources = [aws_s3_bucket.destination.arn]
   }
   statement {
     effect = "Allow"
@@ -158,7 +158,7 @@ data "aws_iam_policy_document" "replication" {
       "s3:GetObjectVersionTagging",
     ]
 
-    resources = ["${aws_s3_bucket.s3_tf.arn}/*"]
+    resources = ["${aws_s3_bucket.destination.arn}/*"]
   }
 
   statement {
@@ -170,7 +170,7 @@ data "aws_iam_policy_document" "replication" {
       "s3:ReplicateTags",
     ]
 
-    resources = ["${aws_s3_bucket.s3_tf.arn}/*"]
+    resources = ["${aws_s3_bucket.destination.arn}/*"]
   }
 }
 
@@ -306,3 +306,15 @@ resource "aws_s3_bucket_lifecycle_configuration" "dest-s3-lifecycle" {
   }
 }
 
+data "aws_iam_policy_document" "dest-assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["s3.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
