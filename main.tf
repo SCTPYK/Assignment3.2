@@ -324,8 +324,8 @@ resource "aws_s3_bucket_acl" "log_bucket_acl" {
 }
 
 resource "aws_s3_bucket_logging" "example" {
-  bucket = aws_s3_bucket.s3_tf.id
+  bucket = aws_s3_bucket.s3_tf-log_bucket.id
 
-  target_bucket = aws_s3_bucket.log_bucket.id
+  target_bucket = aws_s3_bucket.s3_tf.id
   target_prefix = "log/"
 }
